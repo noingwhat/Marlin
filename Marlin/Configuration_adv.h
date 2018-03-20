@@ -908,12 +908,9 @@
                                               //   For Bowden, the full length of the tube and nozzle.
                                               //   For direct drive, the full length of the nozzle.
                                               //   Set to 0 for manual unloading.
-  #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE 3 // Go slow when starting (best used with Bowden).
-  #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH 0   // Set length to allow time to insert material.
-                                               // 0 to disable start loading and skip to fast load only.
-  #define FILAMENT_CHANGE_LOAD_FEEDRATE 6 // (mm/s) Load filament feedrate. This can be pretty fast.
-  //#define FILAMENT_CHANGE_FAST_LOAD_ACCEL 25 // Slower acceleration may allow a faster feedrate for Bowden.
-  #define FILAMENT_CHANGE_LOAD_LENGTH 0   // (mm) Load length of filament, from extruder gear to nozzle.
+  #define FILAMENT_CHANGE_LOAD_FEEDRATE 6     // (mm/s) Load filament feedrate. This can be pretty fast.
+  //#define FILAMENT_CHANGE_LOAD_ACCEL 25 // Slower acceleration may allow a faster feedrate for Bowden.                                                                                                           
+  #define FILAMENT_CHANGE_LOAD_LENGTH 0       // (mm) Load length of filament, from extruder gear to nozzle.
                                               //   For Bowden, the full length of the tube and nozzle.
                                               //   For direct drive, the full length of the nozzle.
   #define ADVANCED_PAUSE_EXTRUDE_FEEDRATE 3   // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
