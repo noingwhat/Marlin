@@ -186,7 +186,7 @@ bool load_filament(const float &load_length/*=0*/, const float &purge_length/*=0
 
   // Load filament
   if (load_length) {
-    #ifdef FILAMENT_CHANGE_LOAD_ACCELERATION
+    #ifdef FILAMENT_CHANGE_LOAD_ACCEL
       float saved_acceleration = planner.retract_acceleration;
       planner.retract_acceleration = FILAMENT_CHANGE_LOAD_ACCEL;
       do_pause_e_move(load_length, FILAMENT_CHANGE_LOAD_FEEDRATE);
@@ -280,9 +280,9 @@ bool unload_filament(const float &unload_length, const bool show_lcd/*=false*/,
   do_pause_e_move(FILAMENT_UNLOAD_RETRACT_LENGTH + FILAMENT_UNLOAD_PURGE_LENGTH, planner.max_feedrate_mm_s[E_AXIS]);
 
   // Unload filament
-  #ifdef FILAMENT_CHANGE_UNLOAD_ACCELERATION
+  #ifdef FILAMENT_CHANGE_UNLOAD_ACCEL
     float saved_acceleration = planner.retract_acceleration;
-    planner.retract_acceleration = FILAMENT_CHANGE_UNLOAD_ACCELERATION;	
+    planner.retract_acceleration = FILAMENT_CHANGE_UNLOAD_ACCEL;	
     do_pause_e_move(unload_length, FILAMENT_CHANGE_UNLOAD_FEEDRATE);
     planner.retract_acceleration = saved_acceleration;
   #else
