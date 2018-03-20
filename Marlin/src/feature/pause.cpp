@@ -189,10 +189,10 @@ bool load_filament(const float &load_length/*=0*/, const float &purge_length/*=0
     #ifdef FILAMENT_CHANGE_LOAD_ACCELERATION
       float saved_acceleration = planner.retract_acceleration;
       planner.retract_acceleration = FILAMENT_CHANGE_LOAD_ACCEL;
-      do_pause_e_move(fast_load_length, FILAMENT_CHANGE_LOAD_FEEDRATE);
+      do_pause_e_move(load_length, FILAMENT_CHANGE_LOAD_FEEDRATE);
       planner.retract_acceleration = saved_acceleration;
     #else
-      do_pause_e_move(fast_load_length, FILAMENT_CHANGE_LOAD_FEEDRATE);
+      do_pause_e_move(load_length, FILAMENT_CHANGE_LOAD_FEEDRATE);
     #endif
   }
 
