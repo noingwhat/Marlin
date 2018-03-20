@@ -899,7 +899,7 @@
  */
 #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #define PAUSE_PARK_RETRACT_FEEDRATE 60      // (mm/s) Initial retract feedrate.
+  #define PAUSE_PARK_RETRACT_FEEDRATE 20      // (mm/s) Initial retract feedrate.
   #define PAUSE_PARK_RETRACT_LENGTH 2         // (mm) Initial retract.
                                               // This short retract is done immediately, before parking the nozzle.
   #define FILAMENT_CHANGE_UNLOAD_FEEDRATE 60  // (mm/s) Unload filament feedrate. This can be pretty fast.
@@ -922,8 +922,8 @@
                                               // Filament Unload does a Retract, Delay, and Purge first:
   #define FILAMENT_UNLOAD_RETRACT_LENGTH 13   // (mm) Unload initial retract length.
   #define FILAMENT_UNLOAD_DELAY 5000          // (ms) Delay for the filament to cool after retract.
-  #define FILAMENT_UNLOAD_PURGE_LENGTH 8      // (mm) An unretract is done, then this length is purged.
-  //#define ADVANCED_PAUSE_CONTINUOUS_PURGE   // Continue purging slowly until the user stops
+  #define FILAMENT_UNLOAD_PURGE_LENGTH 5      // (mm) An unretract is done, then this length is purged.
+  #define ADVANCED_PAUSE_CONTINUOUS_PURGE   // Continue purging slowly until the user stops
 
   #define PAUSE_PARK_NOZZLE_TIMEOUT 45        // (seconds) Time limit before the nozzle is turned off for safety.
   #define FILAMENT_CHANGE_ALERT_BEEPS 0      // Number of alert beeps to play when a response is needed.
