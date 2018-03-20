@@ -4604,7 +4604,30 @@ void kill_screen(const char* lcd_msg) {
       #if LCD_HEIGHT > _FC_LINES_G + 1
         STATIC_ITEM(" ");
       #endif
+      HOTEND_STATUS_ITEM();                         
+      END_SCREEN();
+    }
+    
+    void lcd_advanced_pause_continuous_purge_menu() {
+      START_SCREEN();
+      STATIC_ITEM(MSG_FILAMENT_CHANGE_PURGE_1);
+      #ifdef MSG_FILAMENT_CHANGE_PURGE_2
+        STATIC_ITEM(MSG_FILAMENT_CHANGE_PURGE_2);
+        #define __FC_LINES_G 3
+      #else
+        #define __FC_LINES_G 2
+      #endif
+      #ifdef MSG_FILAMENT_CHANGE_PURGE_3
+        STATIC_ITEM(MSG_FILAMENT_CHANGE_PURGE_3);
+        #define _FC_LINES_G (__FC_LINES_G + 1)
+      #else
+        #define _FC_LINES_G __FC_LINES_G
+      #endif
+      #if LCD_HEIGHT > _FC_LINES_G + 1
+        STATIC_ITEM(" ");
+      #endif
       HOTEND_STATUS_ITEM();
+      STATIC_ITEM(MSG_USERWAIT);
       END_SCREEN();
     }
 
@@ -4628,6 +4651,7 @@ void kill_screen(const char* lcd_msg) {
         case ADVANCED_PAUSE_MESSAGE_INSERT: return lcd_advanced_pause_insert_message;
         case ADVANCED_PAUSE_MESSAGE_LOAD: return lcd_advanced_pause_load_message;
         case ADVANCED_PAUSE_MESSAGE_PURGE: return lcd_advanced_pause_purge_message;
+        case ADVANCED_PAUSE_MESSAGE_CONTINUOUS_PURGE: return lcd_advanced_pause_continuous_purge_menu;                                                                                              
         case ADVANCED_PAUSE_MESSAGE_RESUME: return lcd_advanced_pause_resume_message;
         case ADVANCED_PAUSE_MESSAGE_CLICK_TO_HEAT_NOZZLE: return lcd_advanced_pause_heat_nozzle;
         case ADVANCED_PAUSE_MESSAGE_WAIT_FOR_NOZZLES_TO_HEAT: return lcd_advanced_pause_wait_for_nozzles_to_heat;
