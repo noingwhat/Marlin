@@ -201,7 +201,7 @@ bool load_filament(const float &load_length/*=0*/, const float &purge_length/*=0
       wait_for_user = true;
       while(wait_for_user) {
         idle();
-        lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_CONTINUOUS_EXTRUDE);
+        lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_CONTINUOUS_PURGE);
         do_pause_e_move(1, ADVANCED_PAUSE_EXTRUDE_FEEDRATE);
       }
     }
