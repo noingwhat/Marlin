@@ -188,11 +188,13 @@ bool load_filament(const float &load_length/*=0*/, const float &purge_length/*=0
   if (load_length) do_pause_e_move(load_length, FILAMENT_CHANGE_LOAD_FEEDRATE);
 
   #ifdef ADVANCED_PAUSE_CONTINUOUS_PURGE
-    wait_for_user = true;
-    while(wait_for_user) {
-      idle();
-      lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_CONTINUOUS_EXTRUDE);
-      do_pause_e_move(1, ADVANCED_PAUSE_EXTRUDE_FEEDRATE);
+    if (purge_length > 0) {
+      wait_for_user = true;
+      while(wait_for_user) {
+        idle();
+        lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_CONTINUOUS_EXTRUDE);
+        do_pause_e_move(1, ADVANCED_PAUSE_EXTRUDE_FEEDRATE);
+      }
     }
   #endif
   #ifndef ADVANCED_PAUSE_CONTINUOUS_PURGE
