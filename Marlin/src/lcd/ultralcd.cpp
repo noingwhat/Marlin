@@ -2645,7 +2645,6 @@ void kill_screen(const char* lcd_msg) {
     // Change filament
     //
     #if ENABLED(ADVANCED_PAUSE_FEATURE)
-      if (!IS_SD_FILE_OPEN) {
         #if E_STEPPERS == 1 && !ENABLED(FILAMENT_LOAD_UNLOAD_GCODES)
           if (thermalManager.targetHotEnoughToExtrude(active_extruder))
             MENU_ITEM(gcode, MSG_FILAMENTCHANGE, PSTR("M600 B0"));
@@ -2654,7 +2653,6 @@ void kill_screen(const char* lcd_msg) {
         #else
           MENU_ITEM(submenu, MSG_FILAMENTCHANGE, lcd_change_filament_menu);
         #endif
-      }
     #endif // ADVANCED_PAUSE_FEATURE
 
     #if TEMP_SENSOR_0 != 0
