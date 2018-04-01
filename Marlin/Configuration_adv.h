@@ -900,7 +900,7 @@
 #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   #define PAUSE_PARK_RETRACT_FEEDRATE 20      // (mm/s) Initial retract feedrate.
-  #define PAUSE_PARK_RETRACT_LENGTH 2         // (mm) Initial retract.
+  #define PAUSE_PARK_RETRACT_LENGTH 6         // (mm) Initial retract.
                                               // This short retract is done immediately, before parking the nozzle.
   #define FILAMENT_CHANGE_UNLOAD_FEEDRATE 70  // (mm/s) Unload filament feedrate. This can be pretty fast.
   #define FILAMENT_CHANGE_UNLOAD_ACCEL 25     // Slower acceleration may allow a faster feedrate for Bowden.
@@ -913,8 +913,8 @@
   #define FILAMENT_CHANGE_LOAD_LENGTH 600     // (mm) Load length of filament, from extruder gear to nozzle.
                                               //   For Bowden, the full length of the tube and nozzle.
                                               //   For direct drive, the full length of the nozzle.
-  #define ADVANCED_PAUSE_EXTRUDE_FEEDRATE 3   // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
-  #define ADVANCED_PAUSE_EXTRUDE_LENGTH 0    // (mm) Length to extrude after loading.
+  #define ADVANCED_PAUSE_EXTRUDE_FEEDRATE 5   // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
+  #define ADVANCED_PAUSE_EXTRUDE_LENGTH 5    // (mm) Length to extrude after loading.
                                               //   Set to 0 for manual extrusion.
                                               //   Filament can be extruded repeatedly from the Filament Change menu
                                               //   until extrusion is consistent, and to purge old filament.
@@ -923,8 +923,8 @@
   #define FILAMENT_UNLOAD_RETRACT_LENGTH 13   // (mm) Unload initial retract length.
   #define FILAMENT_UNLOAD_DELAY 5000          // (ms) Delay for the filament to cool after retract.
 
-  #define FILAMENT_UNLOAD_PURGE_LENGTH 5      // (mm) An unretract is done, then this length is purged.
-  #define ADVANCED_PAUSE_CONTINUOUS_PURGE     // Continue purging slowly until the user stops
+  #define FILAMENT_UNLOAD_PURGE_LENGTH 10      // (mm) An unretract is done, then this length is purged.
+  //#define ADVANCED_PAUSE_CONTINUOUS_PURGE     // Continue purging slowly until the user stops
 
   #define PAUSE_PARK_NOZZLE_TIMEOUT 45        // (seconds) Time limit before the nozzle is turned off for safety.
   #define FILAMENT_CHANGE_ALERT_BEEPS 0       // Number of alert beeps to play when a response is needed.

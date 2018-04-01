@@ -4301,7 +4301,7 @@ void kill_screen(const char* lcd_msg) {
         #endif // E_STEPPERS == 1
 
         #if ENABLED(FILAMENT_LOAD_UNLOAD_GCODES)
-          if (!planner.movesplanned() && !IS_SD_FILE_OPEN) {
+          if (!planner.movesplanned()) {
             // Load filament
             #if E_STEPPERS == 1
               PGM_P msg0 = PSTR(MSG_FILAMENTLOAD);
