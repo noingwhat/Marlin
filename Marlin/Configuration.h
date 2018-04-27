@@ -315,12 +315,7 @@
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
 #define TEMP_SENSOR_4 0
-<<<<<<< HEAD
 #define TEMP_SENSOR_BED 1
-=======
-#define TEMP_SENSOR_BED 0
->>>>>>> parent of dfd9b2ade... Merge remote-tracking branch 'upstream/bugfix-2.0.x' into bugfix-2.0.x
-
 // Dummy thermistor constant temperature readings, for use with 998 and 999
 #define DUMMY_THERMISTOR_998_VALUE 25
 #define DUMMY_THERMISTOR_999_VALUE 100
@@ -411,12 +406,8 @@
 // If your configuration is significantly different than this and you don't understand the issues involved, you probably
 // shouldn't use bed PID until someone else verifies your hardware works.
 // If this is enabled, find your own PID constants below.
-<<<<<<< HEAD
-#define PIDTEMPBED
-=======
-//#define PIDTEMPBED
->>>>>>> parent of dfd9b2ade... Merge remote-tracking branch 'upstream/bugfix-2.0.x' into bugfix-2.0.x
 
+#define PIDTEMPBED
 //#define BED_LIMIT_SWITCHING
 
 // This sets the max power delivered to the bed, and replaces the HEATER_BED_DUTY_CYCLE_DIVIDER option.

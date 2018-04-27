@@ -44,10 +44,7 @@ enum AdvancedPauseMessage : char {
   ADVANCED_PAUSE_MESSAGE_INSERT,
   ADVANCED_PAUSE_MESSAGE_LOAD,
   ADVANCED_PAUSE_MESSAGE_PURGE,
-<<<<<<< HEAD
   ADVANCED_PAUSE_MESSAGE_CONTINUOUS_PURGE,
-=======
->>>>>>> parent of dfd9b2ade... Merge remote-tracking branch 'upstream/bugfix-2.0.x' into bugfix-2.0.x
   ADVANCED_PAUSE_MESSAGE_OPTION,
   ADVANCED_PAUSE_MESSAGE_RESUME,
   ADVANCED_PAUSE_MESSAGE_STATUS,
