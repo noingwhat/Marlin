@@ -49,13 +49,6 @@
 #define Z_MAX_PIN          38
 
 //
-// Z Probe (when not Z_MIN_PIN)
-//
-#ifndef Z_MIN_PROBE_PIN
-  #define Z_MIN_PROBE_PIN  38
-#endif
-
-//
 // Steppers
 //
 #define X_STEP_PIN         24
@@ -136,9 +129,9 @@
 
 // SPI for Max6675 or Max31855 Thermocouple
 #if DISABLED(SDSUPPORT)
-  #define MAX6675_SS       53
+  #define MAX6675_SS        53
 #else
-  #define MAX6675_SS       49
+  #define MAX6675_SS        49
 #endif
 
 //
@@ -156,11 +149,7 @@
 // Misc. Functions
 //
 #define SDSS                4
-#define PS_ON_PIN          40   // SERVO3_PIN
-
-#ifndef FIL_RUNOUT_PIN
-  #define FIL_RUNOUT_PIN   39   // SERVO2_PIN
-#endif
+#define PS_ON_PIN          40
 
 // I2C EEPROM with 8K of space
 #define I2C_EEPROM

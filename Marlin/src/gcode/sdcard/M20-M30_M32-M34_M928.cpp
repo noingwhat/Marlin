@@ -29,16 +29,13 @@
 #include "../../module/printcounter.h"
 #include "../../module/stepper.h"
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../feature/power_loss_recovery.h"
-#endif
-
 #if ENABLED(PARK_HEAD_ON_PAUSE)
   #include "../../feature/pause.h"
+  #include "../queue.h"
 #endif
 
-#if ENABLED(PARK_HEAD_ON_PAUSE) || NUM_SERIAL > 1
-  #include "../queue.h"
+#if NUM_SERIAL > 1
+  #include "../../gcode/queue.h"
 #endif
 
 /**
@@ -81,10 +78,6 @@ void GcodeSuite::M23() {
  * M24: Start or Resume SD Print
  */
 void GcodeSuite::M24() {
-  #if ENABLED(POWER_LOSS_RECOVERY)
-    card.removeJobRecoveryFile();
-  #endif
-
   #if ENABLED(PARK_HEAD_ON_PAUSE)
     resume_print();
   #endif

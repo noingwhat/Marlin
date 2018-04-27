@@ -50,9 +50,6 @@ void watchdog_reset() {
   #endif
 }
 
-#else
-  void HAL_clear_reset_source(void) {}
-  uint8_t HAL_get_reset_source(void) { return RST_POWER_ON; }
 #endif // USE_WATCHDOG
 
 #endif // TARGET_LPC1768

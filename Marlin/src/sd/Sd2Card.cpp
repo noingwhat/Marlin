@@ -249,16 +249,15 @@ bool Sd2Card::init(uint8_t sckRateID, pin_t chipSelectPin) {
     watchdog_reset();
   #endif
 
-  // Set pin modes
-  digitalWrite(chipSelectPin_, HIGH);  // For some CPUs pinMode can write the wrong data so init desired data value first
-  pinMode(chipSelectPin_, OUTPUT);     // Solution for #8746 by @benlye
+  // set pin modes
+  pinMode(chipSelectPin_, OUTPUT); // Solution for #8746 by @benlye
   spiBegin();
 
-  // Set SCK rate for initialization commands
+  // set SCK rate for initialization commands
   spiRate_ = SPI_SD_INIT_RATE;
   spiInit(spiRate_);
 
-  // Must supply min of 74 clock cycles with CS high.
+  // must supply min of 74 clock cycles with CS high.
   for (uint8_t i = 0; i < 10; i++) spiSend(0xFF);
 
   // Initialization can cause the watchdog to timeout, so reinit it here
@@ -266,7 +265,7 @@ bool Sd2Card::init(uint8_t sckRateID, pin_t chipSelectPin) {
     watchdog_reset();
   #endif
 
-  // Command to go idle in SPI mode
+  // command to go idle in SPI mode
   while ((status_ = cardCommand(CMD0, 0)) != R1_IDLE_STATE) {
     if (((uint16_t)millis() - t0) > SD_INIT_TIMEOUT) {
       error(SD_CARD_ERROR_CMD0);

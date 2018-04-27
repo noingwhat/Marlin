@@ -23,11 +23,6 @@
 #ifndef HARDWARE_SERIAL_H_
 #define HARDWARE_SERIAL_H_
 
-#include "../../inc/MarlinConfigPre.h"
-#if ENABLED(EMERGENCY_PARSER)
-  #include "../../feature/emergency_parser.h"
-#endif
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <Stream.h>
@@ -51,9 +46,6 @@ private:
     uint32_t TxQueueWritePos;
     uint32_t TxQueueReadPos;
   #endif
-  #if ENABLED(EMERGENCY_PARSER)
-    EmergencyParser::State emergency_state;
-  #endif
 
 public:
   HardwareSerial(LPC_UART_TypeDef *UARTx)
@@ -64,9 +56,6 @@ public:
     #if TX_BUFFER_SIZE > 0
       , TxQueueWritePos(0)
       , TxQueueReadPos(0)
-    #endif
-    #if ENABLED(EMERGENCY_PARSER)
-      , emergency_state(EmergencyParser::State::EP_RESET)
     #endif
   {
   }
@@ -148,6 +137,8 @@ public:
   void print(double value, int round = 6) {
     printf("%f" , value );
   }
+
+
 
   void println(const char value[]) {
     printf("%s\n" , value);

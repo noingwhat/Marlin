@@ -75,7 +75,7 @@ timer_dev* get_timer_dev(int number);
 #define PULSE_TIMER_PRESCALE STEPPER_TIMER_PRESCALE
 
 #define TEMP_TIMER_PRESCALE     1000 // prescaler for setting Temp timer, 72Khz
-#define TEMP_TIMER_FREQUENCY    1000 // temperature interrupt frequency
+#define TEMP_TIMER_FREQUENCY     100 // temperature interrupt frequency
 
 #define STEP_TIMER_MIN_INTERVAL    8 // minimum time in µs between stepper interrupts
 
@@ -88,6 +88,7 @@ timer_dev* get_timer_dev(int number);
 
 #define HAL_timer_get_count(timer_num) timer_get_count(TIMER_DEV(timer_num))
 
+#define HAL_ENABLE_ISRs() do { if (thermalManager.in_temp_isr)DISABLE_TEMPERATURE_INTERRUPT(); else ENABLE_TEMPERATURE_INTERRUPT(); ENABLE_STEPPER_DRIVER_INTERRUPT(); } while(0)
 // TODO change this
 
 
@@ -173,7 +174,5 @@ FORCE_INLINE static void HAL_timer_isr_prologue(const uint8_t timer_num) {
     return;
   }
 }
-
-#define HAL_timer_isr_epilogue(TIMER_NUM)
 
 #endif // _HAL_TIMERS_STM32F1_H

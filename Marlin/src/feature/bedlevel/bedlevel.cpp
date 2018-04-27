@@ -99,21 +99,7 @@ void set_bed_leveling_enabled(const bool enable/*=true*/) {
           planner.unapply_leveling(current_position);
         }
       #else
-        // UBL equivalents for apply/unapply_leveling
-        #if ENABLED(SKEW_CORRECTION)
-          float pos[XYZ] = { current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS] };
-          planner.skew(pos[X_AXIS], pos[Y_AXIS], pos[Z_AXIS]);
-        #else
-          const float (&pos)[XYZE] = current_position;
-        #endif
-        if (planner.leveling_active) {
-          current_position[Z_AXIS] += ubl.get_z_correction(pos[X_AXIS], pos[Y_AXIS]);
-          planner.leveling_active = false;
-        }
-        else {
-          planner.leveling_active = true;
-          current_position[Z_AXIS] -= ubl.get_z_correction(pos[X_AXIS], pos[Y_AXIS]);
-        }
+        planner.leveling_active = enable;                    // just flip the bit, current_position will be wrong until next move.
       #endif
 
     #else // OLDSCHOOL_ABL
@@ -152,16 +138,30 @@ void set_bed_leveling_enabled(const bool enable/*=true*/) {
 
   void set_z_fade_height(const float zfh, const bool do_report/*=true*/) {
 
-    if (planner.z_fade_height == zfh) return;
+    if (planner.z_fade_height == zfh) return; // do nothing if no change
 
-    const bool leveling_was_active = planner.leveling_active;
-    set_bed_leveling_enabled(false);
+    const bool level_active = planner.leveling_active;
+
+    #if ENABLED(AUTO_BED_LEVELING_UBL)
+      if (level_active) set_bed_leveling_enabled(false);  // turn off before changing fade height for proper apply/unapply leveling to maintain current_position
+    #endif
 
     planner.set_z_fade_height(zfh);
 
-    if (leveling_was_active) {
+    if (level_active) {
       const float oldpos[] = { current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS] };
-      set_bed_leveling_enabled(true);
+      #if ENABLED(AUTO_BED_LEVELING_UBL)
+        set_bed_leveling_enabled(true);  // turn back on after changing fade height
+      #else
+        set_current_from_steppers_for_axis(
+          #if ABL_PLANAR
+            ALL_AXES
+          #else
+            Z_AXIS
+          #endif
+        );
+        SYNC_PLAN_POSITION_KINEMATIC();
+      #endif
       if (do_report && memcmp(oldpos, current_position, sizeof(oldpos)))
         report_current_position();
     }

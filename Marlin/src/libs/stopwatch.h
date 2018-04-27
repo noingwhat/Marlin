@@ -54,34 +54,28 @@ class Stopwatch {
     FORCE_INLINE static void init() { reset(); }
 
     /**
-     * @brief Stop the stopwatch
-     * @details Stop the running timer, it will silently ignore the request if
-     *          no timer is currently running.
-     * @return true on success
+     * @brief Stops the stopwatch
+     * @details Stops the running timer, it will silently ignore the request if
+     * no timer is currently running.
+     * @return true is method was successful
      */
     static bool stop();
 
     /**
      * @brief Pause the stopwatch
      * @details Pause the running timer, it will silently ignore the request if
-     *          no timer is currently running.
-     * @return true on success
+     * no timer is currently running.
+     * @return true is method was successful
      */
     static bool pause();
 
     /**
      * @brief Start the stopwatch
      * @details Start the timer, it will silently ignore the request if the
-     *          timer is already running.
-     * @return true on success
+     * timer is already running.
+     * @return true is method was successful
      */
     static bool start();
-
-    /**
-     * @brief Resume the stopwatch
-     * @details Resume a timer from a given duration
-     */
-    static void resume(const millis_t duration);
 
     /**
      * @brief Reset the stopwatch
@@ -94,14 +88,14 @@ class Stopwatch {
      * @details Return true if the timer is currently running, false otherwise.
      * @return true if stopwatch is running
      */
-    FORCE_INLINE static bool isRunning() { return state == RUNNING; }
+    static bool isRunning();
 
     /**
      * @brief Check if the timer is paused
      * @details Return true if the timer is currently paused, false otherwise.
      * @return true if stopwatch is paused
      */
-    FORCE_INLINE static bool isPaused() { return state == PAUSED; }
+    static bool isPaused();
 
     /**
      * @brief Get the running time

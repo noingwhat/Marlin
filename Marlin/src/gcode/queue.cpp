@@ -37,10 +37,6 @@
   #include "../feature/leds/leds.h"
 #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../feature/power_loss_recovery.h"
-#endif
-
 /**
  * GCode line number handling. Hosts may opt to include line numbers when
  * sending commands to Marlin, and lines will be checked for sequentiality.
@@ -119,7 +115,7 @@ inline void _commit_command(bool say_ok
  * Return true if the command was successfully added.
  * Return false for a full buffer, or if the 'command' is a comment.
  */
-inline bool _enqueuecommand(const char* cmd, bool say_ok=false
+inline bool _enqueuecommand(const char* cmd, bool say_ok
   #if NUM_SERIAL > 1
     , int16_t port = -1
   #endif
@@ -137,8 +133,8 @@ inline bool _enqueuecommand(const char* cmd, bool say_ok=false
 /**
  * Enqueue with Serial Echo
  */
-bool enqueue_and_echo_command(const char* cmd) {
-  if (_enqueuecommand(cmd)) {
+bool enqueue_and_echo_command(const char* cmd, bool say_ok/*=false*/) {
+  if (_enqueuecommand(cmd, say_ok)) {
     SERIAL_ECHO_START();
     SERIAL_ECHOPAIR(MSG_ENQUEUEING, cmd);
     SERIAL_CHAR('"');
@@ -180,14 +176,14 @@ void enqueue_and_echo_commands_P(const char * const pgcode) {
   /**
    * Enqueue and return only when commands are actually enqueued
    */
-  void enqueue_and_echo_command_now(const char* cmd) {
-    while (!enqueue_and_echo_command(cmd)) idle();
+  void enqueue_and_echo_command_now(const char* cmd, bool say_ok/*=false*/) {
+    while (!enqueue_and_echo_command(cmd, say_ok)) idle();
   }
   #if HAS_LCD_QUEUE_NOW
     /**
      * Enqueue from program memory and return only when commands are actually enqueued
      */
-    void enqueue_and_echo_commands_now_P(const char * const pgcode) {
+    void enqueue_and_echo_commands_P_now(const char * const pgcode) {
       enqueue_and_echo_commands_P(pgcode);
       while (drain_injected_commands_P()) idle();
     }
@@ -324,24 +320,32 @@ inline void get_serial_commands() {
 
           gcode_N = strtol(npos + 1, NULL, 10);
 
-          if (gcode_N != gcode_LastN + 1 && !M110)
-            return gcode_line_error(PSTR(MSG_ERR_LINE_NO), i);
+          if (gcode_N != gcode_LastN + 1 && !M110) {
+            gcode_line_error(PSTR(MSG_ERR_LINE_NO), i);
+            return;
+          }
 
           char *apos = strrchr(command, '*');
           if (apos) {
             uint8_t checksum = 0, count = uint8_t(apos - command);
             while (count) checksum ^= command[--count];
-            if (strtol(apos + 1, NULL, 10) != checksum)
-              return gcode_line_error(PSTR(MSG_ERR_CHECKSUM_MISMATCH), i);
+            if (strtol(apos + 1, NULL, 10) != checksum) {
+              gcode_line_error(PSTR(MSG_ERR_CHECKSUM_MISMATCH), i);
+              return;
+            }
           }
-          else
-            return gcode_line_error(PSTR(MSG_ERR_NO_CHECKSUM), i);
+          else {
+            gcode_line_error(PSTR(MSG_ERR_NO_CHECKSUM), i);
+            return;
+          }
 
           gcode_LastN = gcode_N;
         }
         #if ENABLED(SDSUPPORT)
-          else if (card.saving)
-            return gcode_line_error(PSTR(MSG_ERR_NO_CHECKSUM), i);
+          else if (card.saving) {
+            gcode_line_error(PSTR(MSG_ERR_NO_CHECKSUM), i);
+            return;
+          }
         #endif
 
         // Movement commands alert when stopped
@@ -490,22 +494,6 @@ inline void get_serial_commands() {
     }
   }
 
-  #if ENABLED(POWER_LOSS_RECOVERY)
-
-    inline bool drain_job_recovery_commands() {
-      static uint8_t job_recovery_commands_index = 0; // Resets on reboot
-      if (job_recovery_commands_count) {
-        if (_enqueuecommand(job_recovery_commands[job_recovery_commands_index])) {
-          ++job_recovery_commands_index;
-          if (!--job_recovery_commands_count) job_recovery_phase = JOB_RECOVERY_IDLE;
-        }
-        return true;
-      }
-      return false;
-    }
-
-  #endif
-
 #endif // SDSUPPORT
 
 /**
@@ -520,11 +508,6 @@ void get_available_commands() {
   if (drain_injected_commands_P()) return;
 
   get_serial_commands();
-
-  #if ENABLED(POWER_LOSS_RECOVERY)
-    // Commands for power-loss recovery take precedence
-    if (job_recovery_phase == JOB_RECOVERY_YES && drain_job_recovery_commands()) return;
-  #endif
 
   #if ENABLED(SDSUPPORT)
     get_sdcard_commands();
@@ -568,12 +551,8 @@ void advance_command_queue() {
           ok_to_send();
       }
     }
-    else {
+    else
       gcode.process_next_command();
-      #if ENABLED(POWER_LOSS_RECOVERY)
-        if (card.cardOK && card.sdprinting) save_job_recovery_info();
-      #endif
-    }
 
   #else
 

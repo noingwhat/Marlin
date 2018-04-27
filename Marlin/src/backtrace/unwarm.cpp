@@ -25,8 +25,7 @@
 
 #if defined(UNW_DEBUG)
 
-/**
- * Printf wrapper.
+/** Printf wrapper.
  * This is used such that alternative outputs for any output can be selected
  * by modification of this wrapper function.
  */
@@ -38,20 +37,19 @@ void UnwPrintf(const char *format, ...) {
 }
 #endif
 
-/**
- * Invalidate all general purpose registers.
+/** Invalidate all general purpose registers.
  */
 void UnwInvalidateRegisterFile(RegData *regFile) {
+
   uint8_t t = 0;
   do {
     regFile[t].o = REG_VAL_INVALID;
     t++;
-  } while (t < 13);
+  } while(t < 13);
 }
 
 
-/**
- * Initialise the data used for unwinding.
+/** Initialise the data used for unwinding.
  */
 void UnwInitState(UnwState * const state,     /**< Pointer to structure to fill. */
                   const UnwindCallbacks *cb,  /**< Callbacks. */
@@ -79,12 +77,12 @@ void UnwInitState(UnwState * const state,     /**< Pointer to structure to fill.
 
 // Detect if function names are available
 static int __attribute__ ((noinline)) has_function_names(void) {
+
   uint32_t flag_word = ((uint32_t*)(((uint32_t)(&has_function_names)) & (-4))) [-1];
   return ((flag_word & 0xff000000) == 0xff000000) ? 1 : 0;
 }
 
-/**
- * Call the report function to indicate some return address.
+/** Call the report function to indicate some return address.
  * This returns the value of the report function, which if true
  * indicates that unwinding may continue.
  */
@@ -107,18 +105,20 @@ bool UnwReportRetAddr(UnwState * const state, uint32_t addr) {
 
     // Scan backwards until we find the function name
     uint32_t v;
-    while (state->cb->readW(pf-4,&v)) {
+    while(state->cb->readW(pf-4,&v)) {
 
       // Check if name descriptor is valid
-      if ((v & 0xFFFFFF00) == 0xFF000000 && (v & 0xFF) > 1) {
+      if ((v & 0xffffff00) == 0xff000000 &&
+          (v & 0xff) > 1) {
+
         // Assume the name was found!
-        entry.name = ((const char*)pf) - 4 - (v & 0xFF);
+        entry.name = ((const char*)pf) - 4 - (v & 0xff);
         entry.function = pf;
         break;
       }
 
       // Go backwards to the previous word
-      pf -= 4;
+      pf -= 4;;
     }
   }
 
@@ -129,8 +129,7 @@ bool UnwReportRetAddr(UnwState * const state, uint32_t addr) {
 }
 
 
-/**
- * Write some register to memory.
+/** Write some register to memory.
  * This will store some register and meta data onto the virtual stack.
  * The address for the write
  * \param state [in/out]  The unwinding state.
@@ -142,8 +141,7 @@ bool UnwMemWriteRegister(UnwState * const state, const uint32_t addr, const RegD
   return UnwMemHashWrite(&state->memData, addr, reg->v, M_IsOriginValid(reg->o));
 }
 
-/**
- * Read a register from memory.
+/** Read a register from memory.
  * This will read a register from memory, and setup the meta data.
  * If the register has been previously written to memory using
  * UnwMemWriteRegister, the local hash will be used to return the
@@ -158,18 +156,23 @@ bool UnwMemWriteRegister(UnwState * const state, const uint32_t addr, const RegD
  *         false is the data could not be read.
  */
 bool UnwMemReadRegister(UnwState * const state, const uint32_t addr, RegData * const reg) {
+
   bool tracked;
 
-  // Check if the value can be found in the hash
-  if (UnwMemHashRead(&state->memData, addr, &reg->v, &tracked)) {
+  /* Check if the value can be found in the hash */
+  if(UnwMemHashRead(&state->memData, addr, &reg->v, &tracked)) {
     reg->o = tracked ? REG_VAL_FROM_MEMORY : REG_VAL_INVALID;
     return true;
   }
-  else if (state->cb->readW(addr, &reg->v)) {   // Not in the hash, so read from real memory
+  /* Not in the hash, so read from real memory */
+  else if(state->cb->readW(addr, &reg->v)) {
     reg->o = REG_VAL_FROM_MEMORY;
     return true;
   }
-  else return false;                            // Not in the hash, and failed to read from memory
+  /* Not in the hash, and failed to read from memory */
+  else {
+    return false;
+  }
 }
 #endif
 

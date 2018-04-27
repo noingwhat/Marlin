@@ -152,9 +152,7 @@
  *  None  Home to all axes with no parameters.
  *        With QUICK_HOME enabled XY will home together, then Z.
  *
- *  Rn  Raise by n mm/inches before homing
- *
- * Cartesian/SCARA parameters
+ * Cartesian parameters
  *
  *  X   Home to the X endstop
  *  Y   Home to the Y endstop
@@ -181,7 +179,7 @@ void GcodeSuite::G28(const bool always_home_all) {
   // Disable the leveling matrix before homing
   #if HAS_LEVELING
     #if ENABLED(RESTORE_LEVELING_AFTER_G28)
-      const bool leveling_was_active = planner.leveling_active;
+      const bool leveling_state_at_entry = planner.leveling_active;
     #endif
     set_bed_leveling_enabled(false);
   #endif
@@ -228,12 +226,11 @@ void GcodeSuite::G28(const bool always_home_all) {
 
     #endif
 
-    const float z_homing_height = (
-      #if ENABLED(UNKNOWN_Z_NO_RAISE)
-        !axis_known_position[Z_AXIS] ? 0 :
-      #endif
-          (parser.seenval('R') ? parser.value_linear_units() : Z_HOMING_HEIGHT)
-    );
+    #if ENABLED(UNKNOWN_Z_NO_RAISE)
+      const float z_homing_height = axis_known_position[Z_AXIS] ? Z_HOMING_HEIGHT : 0;
+    #else
+      constexpr float z_homing_height = Z_HOMING_HEIGHT;
+    #endif
 
     if (z_homing_height && (home_all || homeX || homeY)) {
       // Raise Z before homing any other axes and z is not already high enough (never lower z)
@@ -311,12 +308,10 @@ void GcodeSuite::G28(const bool always_home_all) {
         #else
           HOMEAXIS(Z);
         #endif
-
-        #if HOMING_Z_WITH_PROBE && Z_AFTER_PROBING
-          move_z_after_probing();
-        #endif
-
       } // home_all || homeZ
+      #if HOMING_Z_WITH_PROBE && Z_AFTER_PROBING
+        move_z_after_probing();
+      #endif
     #endif // Z_HOME_DIR < 0
 
     SYNC_PLAN_POSITION_KINEMATIC();
@@ -331,7 +326,7 @@ void GcodeSuite::G28(const bool always_home_all) {
   #endif
 
   #if ENABLED(RESTORE_LEVELING_AFTER_G28)
-    set_bed_leveling_enabled(leveling_was_active);
+    set_bed_leveling_enabled(leveling_state_at_entry);
   #endif
 
   clean_up_after_endstop_or_probe_move();

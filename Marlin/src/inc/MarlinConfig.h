@@ -25,15 +25,14 @@
 
 #include "MarlinConfigPre.h"
 
-#include HAL_PATH(../HAL, HAL.h)
-
+#include "../HAL/HAL.h"
 #include "../pins/pins.h"
 #if defined(__AVR__) && !defined(USBCON)
   #define HardwareSerial_h // trick to disable the standard HWserial
 #endif
 #include "Conditionals_post.h"
 #include "SanityCheck.h"
-#include HAL_PATH(../HAL, SanityCheck.h)
+#include "../HAL/HAL_SanityCheck.h"
 
 // Include all core headers
 #include "../core/enum.h"
